@@ -5,6 +5,9 @@ import * as THREE from "three";
 
 import chessAsset from "@/assets/chinese_chess.glb.asset.json";
 import statueAsset from "@/assets/chinese_statue_vr.glb.asset.json";
+import coinsAsset from "@/assets/pile_of_coins.glb.asset.json";
+import bladeAsset from "@/assets/ghostblade.glb.asset.json";
+import shrineAsset from "@/assets/mystery_model.glb.asset.json";
 
 function damp(current: number, target: number, lambda: number, dt: number) {
   return THREE.MathUtils.damp(current, target, lambda, dt);
