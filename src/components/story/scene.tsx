@@ -237,7 +237,7 @@ function Ripples() {
 function Rig({ progress }: { progress: React.RefObject<number> }) {
   useFrame((state, dt) => {
     const p = progress.current ?? 0;
-    const targetZ = 8 - Math.sin(p * Math.PI) * 1.8;
+    const targetZ = 10 - Math.sin(p * Math.PI) * 1.8;
     const targetY = 0.4 + p * 1.9;
     state.camera.position.x = damp(state.camera.position.x, state.pointer.x * 1.3, 2, dt);
     state.camera.position.y = damp(state.camera.position.y, targetY + state.pointer.y * 0.5, 2, dt);
@@ -253,7 +253,7 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
       dpr={[1, 1.8]}
       shadows
       gl={{ antialias: true }}
-      camera={{ position: [0, 1, 8], fov: 42 }}
+      camera={{ position: [0, 1, 10], fov: 45 }}
     >
       <color attach="background" args={["#0a0a0c"]} />
       <fog attach="fog" args={["#0a0a0c", 10, 24]} />
