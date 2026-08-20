@@ -93,7 +93,7 @@ function Statue({ progress }: { progress: React.RefObject<number> }) {
 
 function ChessSet({ progress }: { progress: React.RefObject<number> }) {
   const { scene } = useGLTF(chessAsset.url);
-  const model = usePreparedModel(scene, { targetSize: 4.2, autoFlat: true });
+  const model = usePreparedModel(scene, { targetSize: 6.4, autoFlat: true });
   const group = useRef<THREE.Group>(null);
 
   useFrame((_, dt) => {
