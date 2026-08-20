@@ -67,7 +67,7 @@ function usePreparedModel(
 function Statue({ progress }: { progress: React.RefObject<number> }) {
   const { scene } = useGLTF(statueAsset.url);
   const model = usePreparedModel(scene, {
-    targetSize: 3.6,
+    targetSize: 5.4,
     dropNames: [/^Plane/i, /^Circle/i],
   });
   const group = useRef<THREE.Group>(null);
