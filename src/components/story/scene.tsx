@@ -114,6 +114,74 @@ function ChessSet({ progress }: { progress: React.RefObject<number> }) {
   );
 }
 
+/** The wager: a pile of coins that rises in Act II and sinks once the game begins. */
+function Coins({ progress }: { progress: React.RefObject<number> }) {
+  const { scene } = useGLTF(coinsAsset.url);
+  const model = usePreparedModel(scene, { targetSize: 1.6, autoFlat: true });
+  const group = useRef<THREE.Group>(null);
+
+  useFrame(({ clock }, dt) => {
+    const g = group.current;
+    if (!g) return;
+    const p = progress.current ?? 0;
+    const enter = THREE.MathUtils.clamp((p - 0.2) / 0.12, 0, 1);
+    const exit = THREE.MathUtils.clamp((p - 0.52) / 0.12, 0, 1);
+    const on = enter - exit;
+    g.visible = on > 0.01;
+    g.position.y = damp(g.position.y, -1.7 + on * 0.1 - (1 - on) * 3, 2.5, dt);
+    g.rotation.y = clock.elapsedTime * 0.25;
+  });
+
+  return (
+    <group ref={group} position={[3.1, -4.7, 0.6]}>
+      <primitive object={model} />
+    </group>
+  );
+}
+
+/** The traveller's blade, planted beside the board through the late acts. */
+function Blade({ progress }: { progress: React.RefObject<number> }) {
+  const { scene } = useGLTF(bladeAsset.url);
+  const model = usePreparedModel(scene, { targetSize: 3.4 });
+  const group = useRef<THREE.Group>(null);
+
+  useFrame(({ clock }, dt) => {
+    const g = group.current;
+    if (!g) return;
+    const p = progress.current ?? 0;
+    const enter = THREE.MathUtils.clamp((p - 0.55) / 0.15, 0, 1);
+    g.visible = enter > 0.01;
+    g.position.y = damp(g.position.y, -1.7 + (1 - enter) * -4 + Math.sin(clock.elapsedTime * 0.6) * 0.06, 2.5, dt);
+    g.rotation.y = damp(g.rotation.y, -0.8 + enter * 1.4, 2, dt);
+  });
+
+  return (
+    <group ref={group} position={[-3.8, -5.7, 0.2]} rotation={[0, -0.8, 0.12]}>
+      <primitive object={model} />
+    </group>
+  );
+}
+
+/** Distant shrine silhouette anchoring the valley behind everything. */
+function Shrine({ progress }: { progress: React.RefObject<number> }) {
+  const { scene } = useGLTF(shrineAsset.url);
+  const model = usePreparedModel(scene, { targetSize: 9 });
+  const group = useRef<THREE.Group>(null);
+
+  useFrame((_, dt) => {
+    const g = group.current;
+    if (!g) return;
+    const p = progress.current ?? 0;
+    g.rotation.y = damp(g.rotation.y, 0.4 + p * 0.5, 1.5, dt);
+  });
+
+  return (
+    <group ref={group} position={[0, -2.4, -13]}>
+      <primitive object={model} />
+    </group>
+  );
+}
+
 function Lantern({ x, y, z, delay }: { x: number; y: number; z: number; delay: number }) {
   const ref = useRef<THREE.Group>(null);
   useFrame(({ clock }) => {
