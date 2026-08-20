@@ -297,3 +297,6 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
 
 useGLTF.preload(statueAsset.url);
 useGLTF.preload(chessAsset.url);
+useGLTF.preload(coinsAsset.url);
+useGLTF.preload(bladeAsset.url);
+useGLTF.preload(shrineAsset.url);
