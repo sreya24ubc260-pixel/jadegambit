@@ -136,27 +136,27 @@ function Index() {
             i % 2 === 0 ? "justify-start" : "justify-end"
           }`}
         >
-          <article className="max-w-md rounded-sm border border-border bg-card/55 p-8 backdrop-blur-md">
-            <div className="flex items-baseline gap-4">
-              <span className="font-display text-5xl leading-none text-gilded">{act.numeral}</span>
-              <span className="text-2xl text-jade">{act.han}</span>
+          <article className="max-w-xs drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+            <div className="flex items-baseline gap-3">
+              <span className="font-display text-2xl leading-none text-gilded">{act.numeral}</span>
+              <span className="text-sm text-jade">{act.han}</span>
             </div>
-            <h2 className="mt-5 font-display text-3xl font-light sm:text-4xl">{act.title}</h2>
-            <div className="my-5 h-px w-24 gold-rule" />
-            <p className="text-sm leading-relaxed text-muted-foreground">{act.body}</p>
-            <p className="mt-6 text-[0.65rem] tracking-[0.28em] text-jade uppercase">{act.note}</p>
+            <h2 className="mt-2 font-display text-lg font-light sm:text-xl">{act.title}</h2>
+            <div className="my-3 h-px w-16 gold-rule" />
+            <p className="text-[0.7rem] leading-relaxed text-muted-foreground">{act.body}</p>
+            <p className="mt-4 text-[0.55rem] tracking-[0.28em] text-jade uppercase">{act.note}</p>
           </article>
         </section>
       ))}
 
       <section className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center">
-        <div className="flex max-w-xl flex-col items-center rounded-sm border border-border bg-card/60 px-8 py-12 backdrop-blur-md">
-          <span className="text-3xl text-jade">終</span>
-          <h2 className="mt-6 font-display text-4xl font-light sm:text-5xl">
+        <div className="flex max-w-xl flex-col items-center drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+          <span className="text-xl text-jade">終</span>
+          <h2 className="mt-4 font-display text-2xl font-light sm:text-3xl">
             The gate is still open
           </h2>
-          <div className="my-6 h-px w-40 gold-rule" />
-          <p className="max-w-sm text-sm text-muted-foreground">
+          <div className="my-4 h-px w-28 gold-rule" />
+          <p className="max-w-xs text-[0.7rem] text-muted-foreground">
             The guardian sits where it always sat. The board is never cleared. Travellers still
             climb the valley, and the first move is always red.
           </p>

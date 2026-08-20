@@ -5,6 +5,9 @@ import * as THREE from "three";
 
 import chessAsset from "@/assets/chinese_chess.glb.asset.json";
 import statueAsset from "@/assets/chinese_statue_vr.glb.asset.json";
+import coinsAsset from "@/assets/pile_of_coins.glb.asset.json";
+import bladeAsset from "@/assets/ghostblade.glb.asset.json";
+import shrineAsset from "@/assets/mystery_model.glb.asset.json";
 
 function damp(current: number, target: number, lambda: number, dt: number) {
   return THREE.MathUtils.damp(current, target, lambda, dt);
@@ -64,7 +67,7 @@ function usePreparedModel(
 function Statue({ progress }: { progress: React.RefObject<number> }) {
   const { scene } = useGLTF(statueAsset.url);
   const model = usePreparedModel(scene, {
-    targetSize: 3.6,
+    targetSize: 5.4,
     dropNames: [/^Plane/i, /^Circle/i],
   });
   const group = useRef<THREE.Group>(null);
@@ -90,7 +93,7 @@ function Statue({ progress }: { progress: React.RefObject<number> }) {
 
 function ChessSet({ progress }: { progress: React.RefObject<number> }) {
   const { scene } = useGLTF(chessAsset.url);
-  const model = usePreparedModel(scene, { targetSize: 4.2, autoFlat: true });
+  const model = usePreparedModel(scene, { targetSize: 6.4, autoFlat: true });
   const group = useRef<THREE.Group>(null);
 
   useFrame((_, dt) => {
@@ -106,6 +109,74 @@ function ChessSet({ progress }: { progress: React.RefObject<number> }) {
 
   return (
     <group ref={group} position={[0, -8, 0]}>
+      <primitive object={model} />
+    </group>
+  );
+}
+
+/** The wager: a pile of coins that rises in Act II and sinks once the game begins. */
+function Coins({ progress }: { progress: React.RefObject<number> }) {
+  const { scene } = useGLTF(coinsAsset.url);
+  const model = usePreparedModel(scene, { targetSize: 1.6, autoFlat: true });
+  const group = useRef<THREE.Group>(null);
+
+  useFrame(({ clock }, dt) => {
+    const g = group.current;
+    if (!g) return;
+    const p = progress.current ?? 0;
+    const enter = THREE.MathUtils.clamp((p - 0.2) / 0.12, 0, 1);
+    const exit = THREE.MathUtils.clamp((p - 0.52) / 0.12, 0, 1);
+    const on = enter - exit;
+    g.visible = on > 0.01;
+    g.position.y = damp(g.position.y, -1.7 + on * 0.1 - (1 - on) * 3, 2.5, dt);
+    g.rotation.y = clock.elapsedTime * 0.25;
+  });
+
+  return (
+    <group ref={group} position={[3.1, -4.7, 0.6]}>
+      <primitive object={model} />
+    </group>
+  );
+}
+
+/** The traveller's blade, planted beside the board through the late acts. */
+function Blade({ progress }: { progress: React.RefObject<number> }) {
+  const { scene } = useGLTF(bladeAsset.url);
+  const model = usePreparedModel(scene, { targetSize: 3.4 });
+  const group = useRef<THREE.Group>(null);
+
+  useFrame(({ clock }, dt) => {
+    const g = group.current;
+    if (!g) return;
+    const p = progress.current ?? 0;
+    const enter = THREE.MathUtils.clamp((p - 0.55) / 0.15, 0, 1);
+    g.visible = enter > 0.01;
+    g.position.y = damp(g.position.y, -1.7 + (1 - enter) * -4 + Math.sin(clock.elapsedTime * 0.6) * 0.06, 2.5, dt);
+    g.rotation.y = damp(g.rotation.y, -0.8 + enter * 1.4, 2, dt);
+  });
+
+  return (
+    <group ref={group} position={[-3.8, -5.7, 0.2]} rotation={[0, -0.8, 0.12]}>
+      <primitive object={model} />
+    </group>
+  );
+}
+
+/** Distant shrine silhouette anchoring the valley behind everything. */
+function Shrine({ progress }: { progress: React.RefObject<number> }) {
+  const { scene } = useGLTF(shrineAsset.url);
+  const model = usePreparedModel(scene, { targetSize: 9 });
+  const group = useRef<THREE.Group>(null);
+
+  useFrame((_, dt) => {
+    const g = group.current;
+    if (!g) return;
+    const p = progress.current ?? 0;
+    g.rotation.y = damp(g.rotation.y, 0.4 + p * 0.5, 1.5, dt);
+  });
+
+  return (
+    <group ref={group} position={[0, -2.4, -13]}>
       <primitive object={model} />
     </group>
   );
@@ -166,7 +237,7 @@ function Ripples() {
 function Rig({ progress }: { progress: React.RefObject<number> }) {
   useFrame((state, dt) => {
     const p = progress.current ?? 0;
-    const targetZ = 8 - Math.sin(p * Math.PI) * 1.8;
+    const targetZ = 10 - Math.sin(p * Math.PI) * 1.8;
     const targetY = 0.4 + p * 1.9;
     state.camera.position.x = damp(state.camera.position.x, state.pointer.x * 1.3, 2, dt);
     state.camera.position.y = damp(state.camera.position.y, targetY + state.pointer.y * 0.5, 2, dt);
@@ -182,7 +253,7 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
       dpr={[1, 1.8]}
       shadows
       gl={{ antialias: true }}
-      camera={{ position: [0, 1, 8], fov: 42 }}
+      camera={{ position: [0, 1, 10], fov: 45 }}
     >
       <color attach="background" args={["#0a0a0c"]} />
       <fog attach="fog" args={["#0a0a0c", 10, 24]} />
@@ -204,6 +275,9 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
           <Statue progress={progress} />
         </Float>
         <ChessSet progress={progress} />
+        <Coins progress={progress} />
+        <Blade progress={progress} />
+        <Shrine progress={progress} />
         <Environment preset="night" />
       </Suspense>
 
@@ -223,3 +297,6 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
 
 useGLTF.preload(statueAsset.url);
 useGLTF.preload(chessAsset.url);
+useGLTF.preload(coinsAsset.url);
+useGLTF.preload(bladeAsset.url);
+useGLTF.preload(shrineAsset.url);
