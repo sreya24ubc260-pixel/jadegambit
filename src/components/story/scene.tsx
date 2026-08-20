@@ -1,0 +1,225 @@
+import { Suspense, useMemo, useRef } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { Environment, Float, useGLTF, Sparkles, ContactShadows } from "@react-three/drei";
+import * as THREE from "three";
+
+import chessAsset from "@/assets/chinese_chess.glb.asset.json";
+import statueAsset from "@/assets/chinese_statue_vr.glb.asset.json";
+
+function damp(current: number, target: number, lambda: number, dt: number) {
+  return THREE.MathUtils.damp(current, target, lambda, dt);
+}
+
+/** Clone a GLTF scene, drop unwanted nodes, then center it on the floor at a target height. */
+function usePreparedModel(
+  scene: THREE.Object3D,
+  {
+    targetSize,
+    dropNames = [],
+    autoFlat = false,
+  }: { targetSize: number; dropNames?: RegExp[]; autoFlat?: boolean },
+) {
+  return useMemo(() => {
+    const c = scene.clone(true);
+
+    const doomed: THREE.Object3D[] = [];
+    c.traverse((o) => {
+      if (dropNames.some((r) => r.test(o.name))) doomed.push(o);
+      const mesh = o as THREE.Mesh;
+      if (mesh.isMesh) {
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+      }
+    });
+    doomed.forEach((o) => o.parent?.remove(o));
+
+    c.updateMatrixWorld(true);
+    let box = new THREE.Box3().setFromObject(c);
+    let size = box.getSize(new THREE.Vector3());
+
+    // Some source models are Z-up; lay them flat when the thinnest axis isn't Y.
+    if (autoFlat && size.y > Math.min(size.x, size.z)) {
+      c.rotation.x = -Math.PI / 2;
+      c.updateMatrixWorld(true);
+      box = new THREE.Box3().setFromObject(c);
+      size = box.getSize(new THREE.Vector3());
+    }
+
+    const center = box.getCenter(new THREE.Vector3());
+    const span = autoFlat ? Math.max(size.x, size.z) : size.y;
+    const s = targetSize / Math.max(span, 0.0001);
+
+    const inner = new THREE.Group();
+    inner.add(c);
+    c.position.set(-center.x, -box.min.y, -center.z);
+
+    const wrapper = new THREE.Group();
+    wrapper.add(inner);
+    wrapper.scale.setScalar(s);
+    return wrapper;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scene, targetSize]);
+}
+
+function Statue({ progress }: { progress: React.RefObject<number> }) {
+  const { scene } = useGLTF(statueAsset.url);
+  const model = usePreparedModel(scene, {
+    targetSize: 3.6,
+    dropNames: [/^Plane/i, /^Circle/i],
+  });
+  const group = useRef<THREE.Group>(null);
+
+  useFrame((_, dt) => {
+    const g = group.current;
+    if (!g) return;
+    const p = progress.current ?? 0;
+    const local = THREE.MathUtils.clamp(p / 0.45, 0, 1);
+    const out = THREE.MathUtils.clamp((p - 0.45) / 0.18, 0, 1);
+    g.rotation.y = damp(g.rotation.y, -0.5 + local * 2.6, 2.5, dt);
+    g.position.y = damp(g.position.y, -1.7 - out * 9, 2.5, dt);
+    g.position.x = damp(g.position.x, local * 0.5, 2.5, dt);
+    g.visible = out < 0.995;
+  });
+
+  return (
+    <group ref={group} position={[0, -1.7, 0]}>
+      <primitive object={model} />
+    </group>
+  );
+}
+
+function ChessSet({ progress }: { progress: React.RefObject<number> }) {
+  const { scene } = useGLTF(chessAsset.url);
+  const model = usePreparedModel(scene, { targetSize: 4.2, autoFlat: true });
+  const group = useRef<THREE.Group>(null);
+
+  useFrame((_, dt) => {
+    const g = group.current;
+    if (!g) return;
+    const p = progress.current ?? 0;
+    const enter = THREE.MathUtils.clamp((p - 0.4) / 0.2, 0, 1);
+    const late = THREE.MathUtils.clamp((p - 0.6) / 0.4, 0, 1);
+    g.visible = enter > 0.002;
+    g.position.y = damp(g.position.y, -8 + enter * 7.2, 2.5, dt);
+    g.rotation.y = damp(g.rotation.y, -0.5 + late * 2, 2.5, dt);
+  });
+
+  return (
+    <group ref={group} position={[0, -8, 0]}>
+      <primitive object={model} />
+    </group>
+  );
+}
+
+function Lantern({ x, y, z, delay }: { x: number; y: number; z: number; delay: number }) {
+  const ref = useRef<THREE.Group>(null);
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + delay;
+    if (ref.current) {
+      ref.current.position.y = y + Math.sin(t * 0.5) * 0.4;
+      ref.current.rotation.z = Math.sin(t * 0.35) * 0.1;
+    }
+  });
+  return (
+    <group ref={ref} position={[x, y, z]}>
+      <mesh scale={[1, 0.8, 1]}>
+        <sphereGeometry args={[0.16, 20, 14]} />
+        <meshStandardMaterial
+          color="#ff7a4d"
+          emissive="#ff3b1f"
+          emissiveIntensity={2.6}
+          roughness={0.6}
+        />
+      </mesh>
+      <mesh position={[0, 0.15, 0]}>
+        <cylinderGeometry args={[0.05, 0.05, 0.06, 12]} />
+        <meshStandardMaterial color="#3a2418" />
+      </mesh>
+      <pointLight color="#ff7a3d" intensity={4} distance={8} decay={2} />
+    </group>
+  );
+}
+
+function Ripples() {
+  const ref = useRef<THREE.Group>(null);
+  useFrame(({ clock }) => {
+    if (!ref.current) return;
+    ref.current.children.forEach((c, i) => {
+      const t = (clock.elapsedTime * 0.22 + i / 5) % 1;
+      c.scale.setScalar(1 + t * 8);
+      const m = (c as THREE.Mesh).material as THREE.MeshBasicMaterial;
+      m.opacity = 0.3 * (1 - t);
+    });
+  });
+  return (
+    <group ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.68, 0]}>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <mesh key={i}>
+          <ringGeometry args={[0.8, 0.83, 96]} />
+          <meshBasicMaterial color="#7fe0c2" transparent opacity={0.2} side={THREE.DoubleSide} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+function Rig({ progress }: { progress: React.RefObject<number> }) {
+  useFrame((state, dt) => {
+    const p = progress.current ?? 0;
+    const targetZ = 8 - Math.sin(p * Math.PI) * 1.8;
+    const targetY = 0.4 + p * 1.9;
+    state.camera.position.x = damp(state.camera.position.x, state.pointer.x * 1.3, 2, dt);
+    state.camera.position.y = damp(state.camera.position.y, targetY + state.pointer.y * 0.5, 2, dt);
+    state.camera.position.z = damp(state.camera.position.z, targetZ, 2, dt);
+    state.camera.lookAt(0, -0.1 + p * 0.4, 0);
+  });
+  return null;
+}
+
+export default function StoryScene({ progress }: { progress: React.RefObject<number> }) {
+  return (
+    <Canvas
+      dpr={[1, 1.8]}
+      shadows
+      gl={{ antialias: true }}
+      camera={{ position: [0, 1, 8], fov: 42 }}
+    >
+      <color attach="background" args={["#0a0a0c"]} />
+      <fog attach="fog" args={["#0a0a0c", 10, 24]} />
+
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[4, 8, 5]} intensity={2} color="#ffd9a8" castShadow />
+      <spotLight position={[-6, 6, 3]} angle={0.7} intensity={60} color="#5fd6b0" penumbra={1} />
+      <spotLight
+        position={[0, 6, 3]}
+        angle={0.9}
+        intensity={90}
+        color="#ffcf9a"
+        penumbra={0.9}
+        castShadow
+      />
+
+      <Suspense fallback={null}>
+        <Float speed={1} rotationIntensity={0.05} floatIntensity={0.2}>
+          <Statue progress={progress} />
+        </Float>
+        <ChessSet progress={progress} />
+        <Environment preset="night" />
+      </Suspense>
+
+      <Lantern x={-3.4} y={1.6} z={-1.5} delay={0} />
+      <Lantern x={3.6} y={2.3} z={-2.6} delay={2.1} />
+      <Lantern x={2.2} y={1.1} z={1.8} delay={4.3} />
+      <Lantern x={-2.4} y={2.8} z={-4} delay={6.2} />
+
+      <Ripples />
+      <Sparkles count={110} scale={[16, 9, 12]} size={2.2} speed={0.22} color="#ffd9a8" />
+      <ContactShadows position={[0, -1.7, 0]} opacity={0.6} scale={22} blur={2.6} far={7} />
+
+      <Rig progress={progress} />
+    </Canvas>
+  );
+}
+
+useGLTF.preload(statueAsset.url);
+useGLTF.preload(chessAsset.url);
