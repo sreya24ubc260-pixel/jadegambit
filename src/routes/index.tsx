@@ -136,15 +136,15 @@ function Index() {
             i % 2 === 0 ? "justify-start" : "justify-end"
           }`}
         >
-          <article className="max-w-md rounded-sm border border-border bg-card/55 p-8 backdrop-blur-md">
-            <div className="flex items-baseline gap-4">
-              <span className="font-display text-5xl leading-none text-gilded">{act.numeral}</span>
-              <span className="text-2xl text-jade">{act.han}</span>
+          <article className="max-w-xs drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+            <div className="flex items-baseline gap-3">
+              <span className="font-display text-2xl leading-none text-gilded">{act.numeral}</span>
+              <span className="text-sm text-jade">{act.han}</span>
             </div>
-            <h2 className="mt-5 font-display text-3xl font-light sm:text-4xl">{act.title}</h2>
-            <div className="my-5 h-px w-24 gold-rule" />
-            <p className="text-sm leading-relaxed text-muted-foreground">{act.body}</p>
-            <p className="mt-6 text-[0.65rem] tracking-[0.28em] text-jade uppercase">{act.note}</p>
+            <h2 className="mt-2 font-display text-lg font-light sm:text-xl">{act.title}</h2>
+            <div className="my-3 h-px w-16 gold-rule" />
+            <p className="text-[0.7rem] leading-relaxed text-muted-foreground">{act.body}</p>
+            <p className="mt-4 text-[0.55rem] tracking-[0.28em] text-jade uppercase">{act.note}</p>
           </article>
         </section>
       ))}
