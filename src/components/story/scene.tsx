@@ -275,6 +275,9 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
           <Statue progress={progress} />
         </Float>
         <ChessSet progress={progress} />
+        <Coins progress={progress} />
+        <Blade progress={progress} />
+        <Shrine progress={progress} />
         <Environment preset="night" />
       </Suspense>
 
