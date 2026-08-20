@@ -150,13 +150,13 @@ function Index() {
       ))}
 
       <section className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center">
-        <div className="flex max-w-xl flex-col items-center rounded-sm border border-border bg-card/60 px-8 py-12 backdrop-blur-md">
-          <span className="text-3xl text-jade">終</span>
-          <h2 className="mt-6 font-display text-4xl font-light sm:text-5xl">
+        <div className="flex max-w-xl flex-col items-center drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+          <span className="text-xl text-jade">終</span>
+          <h2 className="mt-4 font-display text-2xl font-light sm:text-3xl">
             The gate is still open
           </h2>
-          <div className="my-6 h-px w-40 gold-rule" />
-          <p className="max-w-sm text-sm text-muted-foreground">
+          <div className="my-4 h-px w-28 gold-rule" />
+          <p className="max-w-xs text-[0.7rem] text-muted-foreground">
             The guardian sits where it always sat. The board is never cleared. Travellers still
             climb the valley, and the first move is always red.
           </p>
