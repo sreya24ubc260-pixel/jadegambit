@@ -68,18 +68,26 @@ const ACTS = [
   },
   {
     numeral: "VII",
-    han: "场",
-    title: "The Arena of Old Kings",
-    body: "As the moon turned, the valley showed what it had been: a great ringed arena, its tiers empty, its sand long swept clean. Every emperor's champion had sat exactly where he sat now. The guardian had outlived all of them.",
-    note: "The stands remember every loser.",
+    han: "车",
+    title: "The Cart at the Crossroads",
+    body: "Near dawn a food cart rattled up the valley road and stopped without being asked — painted wood, a hot iron plate, steam standing straight up in the cold. The cook said nothing about the game. He set down two bowls, one on each side of the board.",
+    note: "Even legends stop to eat.",
   },
   {
     numeral: "VIII",
+    han: "汤",
+    title: "Broth and Patience",
+    body: "The guardian did not eat, but it waited while the traveller did. Nine hundred winters had taught it that a hurried man loses in eleven moves. The cook fed the fire, the steam turned gold under the lanterns, and the board sat untouched until the bowl was empty.",
+    note: "The cart turns slowly through the steam.",
+  },
+  {
+    numeral: "IX",
     han: "渡",
     title: "Crossing the River",
     body: "On the eighty-first move the traveller pushed a single soldier over the river — a piece that could never return. It was the smallest sacrifice on the board, and it was the whole answer. The gate opened without a sound.",
     note: "Every legend keeps one piece it cannot take back.",
   },
+
   {
     numeral: "IX",
     han: "画",
