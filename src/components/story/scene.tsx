@@ -117,8 +117,8 @@ function Statue({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const local = win(p, 0, 0.11);
-    const out = win(p, 0.11, 0.17);
+    const local = win(p, 0, 0.1);
+    const out = win(p, 0.1, 0.15);
     g.rotation.y = damp(g.rotation.y, -0.5 + local * 2.6, 2.5, dt);
     g.position.y = damp(g.position.y, -1.7 - out * 9, 2.5, dt);
     g.position.x = damp(g.position.x, local * 0.5, 2.5, dt);
@@ -195,12 +195,12 @@ function ChessSet({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const enter = win(p, 0.44, 0.52);
-    const exit = win(p, 0.7, 0.76);
+    const enter = win(p, 0.4, 0.47);
+    const exit = win(p, 0.64, 0.7);
     const on = enter - exit;
     g.visible = on > 0.002;
     g.position.y = damp(g.position.y, -8 + on * 7.2, 2.5, dt);
-    g.rotation.y = damp(g.rotation.y, -0.5 + win(p, 0.5, 0.72) * 2, 2.5, dt);
+    g.rotation.y = damp(g.rotation.y, -0.5 + win(p, 0.45, 0.66) * 2, 2.5, dt);
   });
 
   return (
@@ -220,7 +220,7 @@ function Coins({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const on = win(p, 0.33, 0.39) - win(p, 0.56, 0.62);
+    const on = win(p, 0.33, 0.39) - win(p, 0.5, 0.56);
     g.visible = on > 0.01;
     g.position.y = damp(g.position.y, -1.7 + on * 0.1 - (1 - on) * 3, 2.5, dt);
     g.rotation.y = clock.elapsedTime * 0.25;
@@ -243,7 +243,7 @@ function Blade({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const on = win(p, 0.52, 0.6) - win(p, 0.72, 0.78);
+    const on = win(p, 0.48, 0.55) - win(p, 0.64, 0.7);
     g.visible = on > 0.01;
     g.position.y = damp(
       g.position.y,
@@ -376,8 +376,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={streetAsset.url}
-          from={0.14}
-          to={0.28}
+          from={0.12}
+          to={0.22}
           targetSize={11}
           autoFlat
           z={-3}
@@ -386,10 +386,10 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={hotelAsset.url}
-          from={0.28}
-          to={0.42}
-          targetSize={7.5}
-          z={-1}
+          from={0.23}
+          to={0.34}
+          targetSize={11}
+          z={0}
           spin={0.8}
         />
         <ChessSet progress={progress} />
@@ -398,8 +398,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={arenaAsset.url}
-          from={0.7}
-          to={0.86}
+          from={0.64}
+          to={0.78}
           targetSize={11}
           autoFlat
           z={-4}
@@ -408,7 +408,7 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={paintingAsset.url}
-          from={0.86}
+          from={0.79}
           to={1.1}
           targetSize={7}
           y={-1.4}
