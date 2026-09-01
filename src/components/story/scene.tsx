@@ -10,7 +10,7 @@ import bladeAsset from "@/assets/ghostblade.glb.asset.json";
 import shrineAsset from "@/assets/mystery_model.glb.asset.json";
 import streetAsset from "@/assets/china_street.glb.asset.json";
 import hotelAsset from "@/assets/china_hotel.glb.asset.json";
-import arenaAsset from "@/assets/ancient_chinese_arena.glb.asset.json";
+import truckAsset from "@/assets/food_truck.glb.asset.json";
 import paintingAsset from "@/assets/chinese_painting.glb.asset.json";
 
 function damp(current: number, target: number, lambda: number, dt: number) {
@@ -399,19 +399,18 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <Blade progress={progress} />
         <StageModel
           progress={progress}
-          url={arenaAsset.url}
-          from={0.64}
-          to={0.78}
-          targetSize={11}
-          autoFlat
-          z={-4}
-          spin={0.6}
+          url={truckAsset.url}
+          from={0.66}
+          to={0.84}
+          targetSize={8}
+          z={-2}
+          spin={0.9}
         />
         <StageModel
           progress={progress}
           url={paintingAsset.url}
-          from={0.79}
-          to={1.1}
+          from={0.85}
+          to={1.15}
           targetSize={6}
           y={-1.4}
           z={-3}
@@ -443,5 +442,5 @@ useGLTF.preload(bladeAsset.url);
 useGLTF.preload(shrineAsset.url);
 useGLTF.preload(streetAsset.url);
 useGLTF.preload(hotelAsset.url);
-useGLTF.preload(arenaAsset.url);
+useGLTF.preload(truckAsset.url);
 useGLTF.preload(paintingAsset.url);
