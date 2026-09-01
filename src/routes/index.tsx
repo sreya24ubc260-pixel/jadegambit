@@ -89,7 +89,7 @@ const ACTS = [
   },
 
   {
-    numeral: "IX",
+    numeral: "X",
     han: "画",
     title: "Painted Afterwards",
     body: "No one recorded his name. They painted the moment instead: ink mountains, one thin figure at a stone table, and a river running through the middle of the scroll. The painting still hangs. The pieces in it are mid-game.",
