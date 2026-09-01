@@ -8,6 +8,10 @@ import statueAsset from "@/assets/chinese_statue_vr.glb.asset.json";
 import coinsAsset from "@/assets/pile_of_coins.glb.asset.json";
 import bladeAsset from "@/assets/ghostblade.glb.asset.json";
 import shrineAsset from "@/assets/mystery_model.glb.asset.json";
+import streetAsset from "@/assets/china_street.glb.asset.json";
+import hotelAsset from "@/assets/china_hotel.glb.asset.json";
+import arenaAsset from "@/assets/ancient_chinese_arena.glb.asset.json";
+import paintingAsset from "@/assets/chinese_painting.glb.asset.json";
 
 function damp(current: number, target: number, lambda: number, dt: number) {
   return THREE.MathUtils.damp(current, target, lambda, dt);
@@ -20,7 +24,8 @@ function usePreparedModel(
     targetSize,
     dropNames = [],
     autoFlat = false,
-  }: { targetSize: number; dropNames?: RegExp[]; autoFlat?: boolean },
+    dropBackdrops = false,
+  }: { targetSize: number; dropNames?: RegExp[]; autoFlat?: boolean; dropBackdrops?: boolean },
 ) {
   return useMemo(() => {
     const c = scene.clone(true);
@@ -36,20 +41,54 @@ function usePreparedModel(
     });
     doomed.forEach((o) => o.parent?.remove(o));
 
+    // Sketchfab scenes often ship a giant low-poly painted skybox plane; drop it.
+    if (dropBackdrops) {
+      c.updateMatrixWorld(true);
+      const whole = new THREE.Box3().setFromObject(c);
+      const wholeMax = Math.max(...whole.getSize(new THREE.Vector3()).toArray());
+      const big: THREE.Object3D[] = [];
+      c.traverse((o) => {
+        const mesh = o as THREE.Mesh;
+        if (!mesh.isMesh || !mesh.geometry) return;
+        const tris = (mesh.geometry.index?.count ?? mesh.geometry.attributes['position']?.count ?? 0) / 3;
+        const dim = Math.max(
+          ...new THREE.Box3().setFromObject(mesh).getSize(new THREE.Vector3()).toArray(),
+        );
+        if (tris < 600 && dim > wholeMax * 0.6) big.push(mesh);
+      });
+      big.forEach((o) => o.parent?.remove(o));
+    }
+
+    /** Box over the "core" meshes, ignoring any oversized painted backdrop shell. */
+    const measure = () => {
+      const whole = new THREE.Box3().setFromObject(c);
+      if (!dropBackdrops) return whole;
+      const wholeMax = Math.max(...whole.getSize(new THREE.Vector3()).toArray());
+      const core = new THREE.Box3();
+      c.traverse((o) => {
+        const mesh = o as THREE.Mesh;
+        if (!mesh.isMesh) return;
+        const b = new THREE.Box3().setFromObject(mesh);
+        if (Math.max(...b.getSize(new THREE.Vector3()).toArray()) > wholeMax * 0.6) return;
+        core.union(b);
+      });
+      return core.isEmpty() ? whole : core;
+    };
+
     c.updateMatrixWorld(true);
-    let box = new THREE.Box3().setFromObject(c);
+    let box = measure();
     let size = box.getSize(new THREE.Vector3());
 
     // Some source models are Z-up; lay them flat when the thinnest axis isn't Y.
     if (autoFlat && size.y > Math.min(size.x, size.z)) {
       c.rotation.x = -Math.PI / 2;
       c.updateMatrixWorld(true);
-      box = new THREE.Box3().setFromObject(c);
+      box = measure();
       size = box.getSize(new THREE.Vector3());
     }
 
     const center = box.getCenter(new THREE.Vector3());
-    const span = autoFlat ? Math.max(size.x, size.z) : size.y;
+    const span = autoFlat ? Math.max(size.x, size.z) : Math.max(size.x, size.y, size.z);
     const s = targetSize / Math.max(span, 0.0001);
 
     const inner = new THREE.Group();
@@ -64,6 +103,8 @@ function usePreparedModel(
   }, [scene, targetSize]);
 }
 
+const win = (p: number, a: number, b: number) => THREE.MathUtils.clamp((p - a) / (b - a), 0, 1);
+
 function Statue({ progress }: { progress: React.RefObject<number> }) {
   const { scene } = useGLTF(statueAsset.url);
   const model = usePreparedModel(scene, {
@@ -76,8 +117,8 @@ function Statue({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const local = THREE.MathUtils.clamp(p / 0.45, 0, 1);
-    const out = THREE.MathUtils.clamp((p - 0.45) / 0.18, 0, 1);
+    const local = win(p, 0, 0.11);
+    const out = win(p, 0.11, 0.17);
     g.rotation.y = damp(g.rotation.y, -0.5 + local * 2.6, 2.5, dt);
     g.position.y = damp(g.position.y, -1.7 - out * 9, 2.5, dt);
     g.position.x = damp(g.position.x, local * 0.5, 2.5, dt);
@@ -86,6 +127,60 @@ function Statue({ progress }: { progress: React.RefObject<number> }) {
 
   return (
     <group ref={group} position={[0, -1.7, 0]}>
+      <primitive object={model} />
+    </group>
+  );
+}
+
+/** Large environment set-piece that rises for one act and sinks away afterwards. */
+function StageModel({
+  progress,
+  url,
+  from,
+  to,
+  targetSize,
+  autoFlat = false,
+  y = -1.7,
+  x = 0,
+  z = 0,
+  spin = 0.5,
+  dropNames,
+}: {
+  progress: React.RefObject<number>;
+  url: string;
+  from: number;
+  to: number;
+  targetSize: number;
+  autoFlat?: boolean;
+  y?: number;
+  x?: number;
+  z?: number;
+  spin?: number;
+  dropNames?: RegExp[];
+}) {
+  const { scene } = useGLTF(url);
+  const model = usePreparedModel(scene, {
+    targetSize,
+    autoFlat,
+    dropNames: dropNames ?? [],
+    dropBackdrops: true,
+  });
+  const group = useRef<THREE.Group>(null);
+
+  useFrame((_, dt) => {
+    const g = group.current;
+    if (!g) return;
+    const p = progress.current ?? 0;
+    const enter = win(p, from - 0.06, from + 0.02);
+    const exit = win(p, to, to + 0.06);
+    const on = enter - exit;
+    g.visible = on > 0.01;
+    g.position.y = damp(g.position.y, y - (1 - on) * 11, 2.2, dt);
+    g.rotation.y = damp(g.rotation.y, -0.4 + win(p, from, to) * spin, 1.6, dt);
+  });
+
+  return (
+    <group ref={group} position={[x, y - 11, z]}>
       <primitive object={model} />
     </group>
   );
@@ -100,11 +195,12 @@ function ChessSet({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const enter = THREE.MathUtils.clamp((p - 0.4) / 0.2, 0, 1);
-    const late = THREE.MathUtils.clamp((p - 0.6) / 0.4, 0, 1);
-    g.visible = enter > 0.002;
-    g.position.y = damp(g.position.y, -8 + enter * 7.2, 2.5, dt);
-    g.rotation.y = damp(g.rotation.y, -0.5 + late * 2, 2.5, dt);
+    const enter = win(p, 0.44, 0.52);
+    const exit = win(p, 0.7, 0.76);
+    const on = enter - exit;
+    g.visible = on > 0.002;
+    g.position.y = damp(g.position.y, -8 + on * 7.2, 2.5, dt);
+    g.rotation.y = damp(g.rotation.y, -0.5 + win(p, 0.5, 0.72) * 2, 2.5, dt);
   });
 
   return (
@@ -114,7 +210,7 @@ function ChessSet({ progress }: { progress: React.RefObject<number> }) {
   );
 }
 
-/** The wager: a pile of coins that rises in Act II and sinks once the game begins. */
+/** The wager: a pile of coins that rises with the bet and sinks once the game begins. */
 function Coins({ progress }: { progress: React.RefObject<number> }) {
   const { scene } = useGLTF(coinsAsset.url);
   const model = usePreparedModel(scene, { targetSize: 1.6, autoFlat: true });
@@ -124,9 +220,7 @@ function Coins({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const enter = THREE.MathUtils.clamp((p - 0.2) / 0.12, 0, 1);
-    const exit = THREE.MathUtils.clamp((p - 0.52) / 0.12, 0, 1);
-    const on = enter - exit;
+    const on = win(p, 0.33, 0.39) - win(p, 0.56, 0.62);
     g.visible = on > 0.01;
     g.position.y = damp(g.position.y, -1.7 + on * 0.1 - (1 - on) * 3, 2.5, dt);
     g.rotation.y = clock.elapsedTime * 0.25;
@@ -149,10 +243,15 @@ function Blade({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const enter = THREE.MathUtils.clamp((p - 0.55) / 0.15, 0, 1);
-    g.visible = enter > 0.01;
-    g.position.y = damp(g.position.y, -1.7 + (1 - enter) * -4 + Math.sin(clock.elapsedTime * 0.6) * 0.06, 2.5, dt);
-    g.rotation.y = damp(g.rotation.y, -0.8 + enter * 1.4, 2, dt);
+    const on = win(p, 0.52, 0.6) - win(p, 0.72, 0.78);
+    g.visible = on > 0.01;
+    g.position.y = damp(
+      g.position.y,
+      -1.7 + (1 - on) * -4 + Math.sin(clock.elapsedTime * 0.6) * 0.06,
+      2.5,
+      dt,
+    );
+    g.rotation.y = damp(g.rotation.y, -0.8 + on * 1.4, 2, dt);
   });
 
   return (
@@ -274,9 +373,48 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <Float speed={1} rotationIntensity={0.05} floatIntensity={0.2}>
           <Statue progress={progress} />
         </Float>
+        <StageModel
+          progress={progress}
+          url={streetAsset.url}
+          from={0.14}
+          to={0.28}
+          targetSize={11}
+          autoFlat
+          z={-3}
+          spin={0.35}
+        />
+        <StageModel
+          progress={progress}
+          url={hotelAsset.url}
+          from={0.28}
+          to={0.42}
+          targetSize={7.5}
+          z={-1}
+          spin={0.8}
+        />
         <ChessSet progress={progress} />
         <Coins progress={progress} />
         <Blade progress={progress} />
+        <StageModel
+          progress={progress}
+          url={arenaAsset.url}
+          from={0.7}
+          to={0.86}
+          targetSize={11}
+          autoFlat
+          z={-4}
+          spin={0.6}
+        />
+        <StageModel
+          progress={progress}
+          url={paintingAsset.url}
+          from={0.86}
+          to={1.1}
+          targetSize={7}
+          y={-1.4}
+          z={-3}
+          spin={0.25}
+        />
         <Shrine progress={progress} />
         <Environment preset="night" />
       </Suspense>
@@ -300,3 +438,7 @@ useGLTF.preload(chessAsset.url);
 useGLTF.preload(coinsAsset.url);
 useGLTF.preload(bladeAsset.url);
 useGLTF.preload(shrineAsset.url);
+useGLTF.preload(streetAsset.url);
+useGLTF.preload(hotelAsset.url);
+useGLTF.preload(arenaAsset.url);
+useGLTF.preload(paintingAsset.url);
