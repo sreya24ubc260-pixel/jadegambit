@@ -145,6 +145,7 @@ function StageModel({
   z = 0,
   spin = 0.5,
   dropNames,
+  keepBackdrop = false,
 }: {
   progress: React.RefObject<number>;
   url: string;
@@ -157,13 +158,14 @@ function StageModel({
   z?: number;
   spin?: number;
   dropNames?: RegExp[];
+  keepBackdrop?: boolean;
 }) {
   const { scene } = useGLTF(url);
   const model = usePreparedModel(scene, {
     targetSize,
     autoFlat,
     dropNames: dropNames ?? [],
-    dropBackdrops: true,
+    dropBackdrops: !keepBackdrop,
   });
   const group = useRef<THREE.Group>(null);
 
@@ -410,10 +412,10 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
           url={paintingAsset.url}
           from={0.79}
           to={1.1}
-          targetSize={4.5}
+          targetSize={6}
           y={-1.4}
-          x={1.4}
-          z={-4}
+          z={-3}
+          keepBackdrop
           spin={0.25}
         />
         <Shrine progress={progress} />
