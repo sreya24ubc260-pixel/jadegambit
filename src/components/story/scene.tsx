@@ -410,9 +410,10 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
           url={paintingAsset.url}
           from={0.79}
           to={1.1}
-          targetSize={7}
+          targetSize={4.5}
           y={-1.4}
-          z={-3}
+          x={1.4}
+          z={-4}
           spin={0.25}
         />
         <Shrine progress={progress} />
