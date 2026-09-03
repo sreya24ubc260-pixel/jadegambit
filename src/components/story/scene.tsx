@@ -121,7 +121,7 @@ function Statue({ progress }: { progress: React.RefObject<number> }) {
     if (!g) return;
     const p = progress.current ?? 0;
     const local = win(p, 0, 0.1);
-    const out = win(p, 0.1, 0.15);
+    const out = win(p, 0.11, 0.17);
     g.rotation.y = damp(g.rotation.y, -0.5 + local * 2.6, 2.5, dt);
     g.position.y = damp(g.position.y, -1.7 - out * 9, 2.5, dt);
     g.position.x = damp(g.position.x, local * 0.5, 2.5, dt);
