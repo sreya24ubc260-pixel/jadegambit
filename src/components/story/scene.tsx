@@ -205,7 +205,7 @@ function ChessSet({ progress }: { progress: React.RefObject<number> }) {
     const on = enter - exit;
     g.visible = on > 0.002;
     g.position.y = damp(g.position.y, -8 + on * 7.2, 2.5, dt);
-    g.rotation.y = damp(g.rotation.y, -0.5 + win(p, 0.45, 0.66) * 2, 2.5, dt);
+    g.rotation.y = damp(g.rotation.y, -0.5 + win(p, 0.36, 0.68) * 2, 2.5, dt);
   });
 
   return (
