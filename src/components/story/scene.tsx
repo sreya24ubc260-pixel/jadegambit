@@ -12,6 +12,9 @@ import streetAsset from "@/assets/china_street.glb.asset.json";
 import hotelAsset from "@/assets/china_hotel.glb.asset.json";
 import truckAsset from "@/assets/food_truck.glb.asset.json";
 import paintingAsset from "@/assets/chinese_painting.glb.asset.json";
+import dragonAsset from "@/assets/chinese_red_dragon.glb.asset.json";
+import festivalLanternAsset from "@/assets/chinese_new_year_lantern.glb.asset.json";
+import cemeteryAsset from "@/assets/a_peaceful_cemetery_graveyard.glb.asset.json";
 
 function damp(current: number, target: number, lambda: number, dt: number) {
   return THREE.MathUtils.damp(current, target, lambda, dt);
