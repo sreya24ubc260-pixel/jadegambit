@@ -225,7 +225,7 @@ function Coins({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const on = win(p, 0.33, 0.39) - win(p, 0.5, 0.56);
+    const on = win(p, 0.25, 0.31) - win(p, 0.38, 0.44);
     g.visible = on > 0.01;
     g.position.y = damp(g.position.y, -1.7 + on * 0.1 - (1 - on) * 3, 2.5, dt);
     g.rotation.y = clock.elapsedTime * 0.25;
