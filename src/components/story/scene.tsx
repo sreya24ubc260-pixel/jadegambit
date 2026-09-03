@@ -381,8 +381,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={streetAsset.url}
-          from={0.12}
-          to={0.22}
+          from={0.11}
+          to={0.19}
           targetSize={11}
           autoFlat
           z={-3}
@@ -391,8 +391,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={hotelAsset.url}
-          from={0.23}
-          to={0.34}
+          from={0.19}
+          to={0.27}
           targetSize={11}
           z={0}
           spin={0.8}
@@ -403,16 +403,46 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={truckAsset.url}
-          from={0.66}
-          to={0.84}
+          from={0.47}
+          to={0.61}
           targetSize={8}
           z={-2}
           spin={0.9}
         />
         <StageModel
           progress={progress}
+          url={dragonAsset.url}
+          from={0.68}
+          to={0.76}
+          targetSize={10}
+          y={0.6}
+          z={-4}
+          spin={1.1}
+        />
+        <StageModel
+          progress={progress}
+          url={festivalLanternAsset.url}
+          from={0.75}
+          to={0.83}
+          targetSize={5.5}
+          y={-1.2}
+          z={-1}
+          spin={0.6}
+        />
+        <StageModel
+          progress={progress}
+          url={cemeteryAsset.url}
+          from={0.82}
+          to={0.9}
+          targetSize={12}
+          autoFlat
+          z={-3}
+          spin={0.3}
+        />
+        <StageModel
+          progress={progress}
           url={paintingAsset.url}
-          from={0.85}
+          from={0.9}
           to={1.15}
           targetSize={6}
           y={-1.4}
