@@ -12,6 +12,9 @@ import streetAsset from "@/assets/china_street.glb.asset.json";
 import hotelAsset from "@/assets/china_hotel.glb.asset.json";
 import truckAsset from "@/assets/food_truck.glb.asset.json";
 import paintingAsset from "@/assets/chinese_painting.glb.asset.json";
+import dragonAsset from "@/assets/chinese_red_dragon.glb.asset.json";
+import festivalLanternAsset from "@/assets/chinese_new_year_lantern.glb.asset.json";
+import cemeteryAsset from "@/assets/a_peaceful_cemetery_graveyard.glb.asset.json";
 
 function damp(current: number, target: number, lambda: number, dt: number) {
   return THREE.MathUtils.damp(current, target, lambda, dt);
@@ -118,7 +121,7 @@ function Statue({ progress }: { progress: React.RefObject<number> }) {
     if (!g) return;
     const p = progress.current ?? 0;
     const local = win(p, 0, 0.1);
-    const out = win(p, 0.1, 0.15);
+    const out = win(p, 0.11, 0.17);
     g.rotation.y = damp(g.rotation.y, -0.5 + local * 2.6, 2.5, dt);
     g.position.y = damp(g.position.y, -1.7 - out * 9, 2.5, dt);
     g.position.x = damp(g.position.x, local * 0.5, 2.5, dt);
@@ -197,12 +200,12 @@ function ChessSet({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const enter = win(p, 0.4, 0.47);
-    const exit = win(p, 0.64, 0.7);
+    const enter = win(p, 0.32, 0.38);
+    const exit = win(p, 0.66, 0.72);
     const on = enter - exit;
     g.visible = on > 0.002;
     g.position.y = damp(g.position.y, -8 + on * 7.2, 2.5, dt);
-    g.rotation.y = damp(g.rotation.y, -0.5 + win(p, 0.45, 0.66) * 2, 2.5, dt);
+    g.rotation.y = damp(g.rotation.y, -0.5 + win(p, 0.36, 0.68) * 2, 2.5, dt);
   });
 
   return (
@@ -222,7 +225,7 @@ function Coins({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const on = win(p, 0.33, 0.39) - win(p, 0.5, 0.56);
+    const on = win(p, 0.25, 0.31) - win(p, 0.38, 0.44);
     g.visible = on > 0.01;
     g.position.y = damp(g.position.y, -1.7 + on * 0.1 - (1 - on) * 3, 2.5, dt);
     g.rotation.y = clock.elapsedTime * 0.25;
@@ -245,7 +248,7 @@ function Blade({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const on = win(p, 0.48, 0.55) - win(p, 0.64, 0.7);
+    const on = win(p, 0.4, 0.46) - win(p, 0.62, 0.68);
     g.visible = on > 0.01;
     g.position.y = damp(
       g.position.y,
@@ -378,8 +381,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={streetAsset.url}
-          from={0.12}
-          to={0.22}
+          from={0.11}
+          to={0.19}
           targetSize={11}
           autoFlat
           z={-3}
@@ -388,8 +391,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={hotelAsset.url}
-          from={0.23}
-          to={0.34}
+          from={0.19}
+          to={0.27}
           targetSize={11}
           z={0}
           spin={0.8}
@@ -400,16 +403,48 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={truckAsset.url}
-          from={0.66}
-          to={0.84}
+          from={0.47}
+          to={0.61}
           targetSize={8}
           z={-2}
           spin={0.9}
         />
         <StageModel
           progress={progress}
+          url={dragonAsset.url}
+          from={0.68}
+          to={0.76}
+          targetSize={9}
+          y={0.4}
+          z={-9}
+          keepBackdrop
+          spin={1.1}
+        />
+        <StageModel
+          progress={progress}
+          url={festivalLanternAsset.url}
+          from={0.75}
+          to={0.83}
+          targetSize={4.2}
+          y={-1.4}
+          z={-6}
+          keepBackdrop
+          spin={0.6}
+        />
+        <StageModel
+          progress={progress}
+          url={cemeteryAsset.url}
+          from={0.82}
+          to={0.9}
+          targetSize={7.5}
+          autoFlat
+          z={-6}
+          spin={0.3}
+        />
+        <StageModel
+          progress={progress}
           url={paintingAsset.url}
-          from={0.85}
+          from={0.9}
           to={1.15}
           targetSize={6}
           y={-1.4}
@@ -444,3 +479,6 @@ useGLTF.preload(streetAsset.url);
 useGLTF.preload(hotelAsset.url);
 useGLTF.preload(truckAsset.url);
 useGLTF.preload(paintingAsset.url);
+useGLTF.preload(dragonAsset.url);
+useGLTF.preload(festivalLanternAsset.url);
+useGLTF.preload(cemeteryAsset.url);

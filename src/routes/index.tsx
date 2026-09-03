@@ -90,6 +90,28 @@ const ACTS = [
 
   {
     numeral: "X",
+    han: "龙",
+    title: "The Dragon Answers",
+    body: "As the gate swung wide, something enormous uncoiled out of the mist above the valley — red as lacquer, long as the road itself, turning slowly on air that should not have held it. It did not roar. It simply looked at the board, saw the crossing, and moved on.",
+    note: "It circles once before it goes.",
+  },
+  {
+    numeral: "XI",
+    han: "灯",
+    title: "The Festival Lantern",
+    body: "In the town below they had already lit the new year lantern, not knowing why the night felt different. Red silk, gold ribs, a small fire turning inside. The traveller watched it from the mountain and understood that the story had left him and become somebody else's.",
+    note: "One fire, kept alive by strangers.",
+  },
+  {
+    numeral: "XII",
+    han: "墓",
+    title: "The Quiet Field",
+    body: "Further down the slope lay the stones of everyone who had climbed before him and stayed. Grass over granite, names softened by rain. Nine hundred winters of players, each of whom had also believed the guardian could be hurried.",
+    note: "The losers are all still here.",
+  },
+
+  {
+    numeral: "XIII",
     han: "画",
     title: "Painted Afterwards",
     body: "No one recorded his name. They painted the moment instead: ink mountains, one thin figure at a stone table, and a river running through the middle of the scroll. The painting still hangs. The pieces in it are mid-game.",
