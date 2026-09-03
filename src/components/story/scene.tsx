@@ -120,8 +120,9 @@ function Statue({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const local = win(p, 0, 0.1);
-    const out = win(p, 0.11, 0.17);
+    const local = win(p, 0, 0.09);
+    const out = win(p, 0.11, 0.15);
+
     g.rotation.y = damp(g.rotation.y, -0.5 + local * 2.6, 2.5, dt);
     g.position.y = damp(g.position.y, -1.7 - out * 9, 2.5, dt);
     g.position.x = damp(g.position.x, local * 0.5, 2.5, dt);
@@ -176,8 +177,9 @@ function StageModel({
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const enter = win(p, from - 0.06, from + 0.02);
-    const exit = win(p, to, to + 0.06);
+    const enter = win(p, from - 0.035, from + 0.005);
+    const exit = win(p, to - 0.005, to + 0.035);
+
     const on = enter - exit;
     g.visible = on > 0.01;
     g.position.y = damp(g.position.y, y - (1 - on) * 11, 2.2, dt);
