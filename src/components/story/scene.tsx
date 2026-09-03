@@ -248,7 +248,7 @@ function Blade({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const on = win(p, 0.48, 0.55) - win(p, 0.64, 0.7);
+    const on = win(p, 0.4, 0.46) - win(p, 0.62, 0.68);
     g.visible = on > 0.01;
     g.position.y = damp(
       g.position.y,
