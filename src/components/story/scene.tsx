@@ -477,3 +477,6 @@ useGLTF.preload(streetAsset.url);
 useGLTF.preload(hotelAsset.url);
 useGLTF.preload(truckAsset.url);
 useGLTF.preload(paintingAsset.url);
+useGLTF.preload(dragonAsset.url);
+useGLTF.preload(festivalLanternAsset.url);
+useGLTF.preload(cemeteryAsset.url);
