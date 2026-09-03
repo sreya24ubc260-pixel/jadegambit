@@ -202,13 +202,15 @@ function ChessSet({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const enter = win(p, 0.32, 0.38);
-    const exit = win(p, 0.66, 0.72);
-    const on = enter - exit;
+    // Two windows: the game itself (acts V–VI), then the final crossing (act IX).
+    const first = win(p, 0.33, 0.37) - win(p, 0.47, 0.51);
+    const second = win(p, 0.62, 0.66) - win(p, 0.71, 0.75);
+    const on = THREE.MathUtils.clamp(first + second, 0, 1);
     g.visible = on > 0.002;
     g.position.y = damp(g.position.y, -8 + on * 7.2, 2.5, dt);
-    g.rotation.y = damp(g.rotation.y, -0.5 + win(p, 0.36, 0.68) * 2, 2.5, dt);
+    g.rotation.y = damp(g.rotation.y, -0.5 + win(p, 0.35, 0.73) * 2, 2.5, dt);
   });
+
 
   return (
     <group ref={group} position={[0, -8, 0]}>
@@ -227,7 +229,7 @@ function Coins({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const on = win(p, 0.25, 0.31) - win(p, 0.38, 0.44);
+    const on = win(p, 0.27, 0.31) - win(p, 0.34, 0.38);
     g.visible = on > 0.01;
     g.position.y = damp(g.position.y, -1.7 + on * 0.1 - (1 - on) * 3, 2.5, dt);
     g.rotation.y = clock.elapsedTime * 0.25;
@@ -250,7 +252,7 @@ function Blade({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const on = win(p, 0.4, 0.46) - win(p, 0.62, 0.68);
+    const on = win(p, 0.42, 0.45) - win(p, 0.48, 0.51);
     g.visible = on > 0.01;
     g.position.y = damp(
       g.position.y,
