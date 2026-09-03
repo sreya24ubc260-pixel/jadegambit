@@ -120,8 +120,9 @@ function Statue({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const local = win(p, 0, 0.1);
-    const out = win(p, 0.11, 0.17);
+    const local = win(p, 0, 0.09);
+    const out = win(p, 0.11, 0.15);
+
     g.rotation.y = damp(g.rotation.y, -0.5 + local * 2.6, 2.5, dt);
     g.position.y = damp(g.position.y, -1.7 - out * 9, 2.5, dt);
     g.position.x = damp(g.position.x, local * 0.5, 2.5, dt);
@@ -176,8 +177,9 @@ function StageModel({
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const enter = win(p, from - 0.06, from + 0.02);
-    const exit = win(p, to, to + 0.06);
+    const enter = win(p, from - 0.035, from + 0.005);
+    const exit = win(p, to - 0.005, to + 0.035);
+
     const on = enter - exit;
     g.visible = on > 0.01;
     g.position.y = damp(g.position.y, y - (1 - on) * 11, 2.2, dt);
@@ -200,13 +202,15 @@ function ChessSet({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const enter = win(p, 0.32, 0.38);
-    const exit = win(p, 0.66, 0.72);
-    const on = enter - exit;
+    // Two windows: the game itself (acts V–VI), then the final crossing (act IX).
+    const first = win(p, 0.33, 0.37) - win(p, 0.47, 0.51);
+    const second = win(p, 0.62, 0.66) - win(p, 0.71, 0.75);
+    const on = THREE.MathUtils.clamp(first + second, 0, 1);
     g.visible = on > 0.002;
     g.position.y = damp(g.position.y, -8 + on * 7.2, 2.5, dt);
-    g.rotation.y = damp(g.rotation.y, -0.5 + win(p, 0.36, 0.68) * 2, 2.5, dt);
+    g.rotation.y = damp(g.rotation.y, -0.5 + win(p, 0.35, 0.73) * 2, 2.5, dt);
   });
+
 
   return (
     <group ref={group} position={[0, -8, 0]}>
@@ -225,7 +229,7 @@ function Coins({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const on = win(p, 0.25, 0.31) - win(p, 0.38, 0.44);
+    const on = win(p, 0.27, 0.31) - win(p, 0.34, 0.38);
     g.visible = on > 0.01;
     g.position.y = damp(g.position.y, -1.7 + on * 0.1 - (1 - on) * 3, 2.5, dt);
     g.rotation.y = clock.elapsedTime * 0.25;
@@ -248,7 +252,7 @@ function Blade({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const on = win(p, 0.4, 0.46) - win(p, 0.62, 0.68);
+    const on = win(p, 0.42, 0.45) - win(p, 0.48, 0.51);
     g.visible = on > 0.01;
     g.position.y = damp(
       g.position.y,
@@ -381,8 +385,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={streetAsset.url}
-          from={0.11}
-          to={0.19}
+          from={0.16}
+          to={0.2}
           targetSize={11}
           autoFlat
           z={-3}
@@ -391,7 +395,7 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={hotelAsset.url}
-          from={0.19}
+          from={0.23}
           to={0.27}
           targetSize={11}
           z={0}
@@ -403,8 +407,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={truckAsset.url}
-          from={0.47}
-          to={0.61}
+          from={0.54}
+          to={0.6}
           targetSize={8}
           z={-2}
           spin={0.9}
@@ -412,8 +416,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={dragonAsset.url}
-          from={0.68}
-          to={0.76}
+          from={0.76}
+          to={0.79}
           targetSize={9}
           y={0.4}
           z={-9}
@@ -423,8 +427,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={festivalLanternAsset.url}
-          from={0.75}
-          to={0.83}
+          from={0.83}
+          to={0.86}
           targetSize={4.2}
           y={-1.4}
           z={-6}
@@ -434,8 +438,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={cemeteryAsset.url}
-          from={0.82}
-          to={0.9}
+          from={0.9}
+          to={0.93}
           targetSize={7.5}
           autoFlat
           z={-6}
@@ -444,12 +448,13 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={paintingAsset.url}
-          from={0.9}
+          from={0.96}
           to={1.15}
           targetSize={6}
           y={-1.4}
           z={-3}
           keepBackdrop
+
           spin={0.25}
         />
         <Shrine progress={progress} />
