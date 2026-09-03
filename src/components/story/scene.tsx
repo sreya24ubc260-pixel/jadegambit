@@ -200,8 +200,8 @@ function ChessSet({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const enter = win(p, 0.4, 0.47);
-    const exit = win(p, 0.64, 0.7);
+    const enter = win(p, 0.32, 0.38);
+    const exit = win(p, 0.66, 0.72);
     const on = enter - exit;
     g.visible = on > 0.002;
     g.position.y = damp(g.position.y, -8 + on * 7.2, 2.5, dt);
