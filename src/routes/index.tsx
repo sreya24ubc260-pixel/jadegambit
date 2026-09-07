@@ -92,7 +92,7 @@ const ACTS = [
     numeral: "X",
     han: "龙",
     title: "The Dragon Answers",
-    body: "As the gate swung wide, something enormous uncoiled out of the mist above the valley — red as lacquer, long as the road itself, turning slowly on air that should not have held it. It did not roar. It simply looked at the board, saw the crossing, and moved on.",
+    body: "As the gate swung wide, something enormous uncoiled out of the mist above the valley — red as lacquer, long as the road itself, turning slowly on air that should not have held it. It did not roar. It simply looked down at the road the traveller had walked, saw how far it ran, and moved on.",
     note: "It circles once before it goes.",
   },
   {
