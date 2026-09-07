@@ -414,8 +414,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={dragonAsset.url}
-          from={0.7}
-          to={0.735}
+          from={0.73}
+          to={0.77}
           targetSize={9}
           y={0.4}
           z={-9}
@@ -425,8 +425,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={festivalLanternAsset.url}
-          from={0.772}
-          to={0.806}
+          from={0.8}
+          to={0.84}
           targetSize={4.2}
           y={-1.4}
           z={-6}
@@ -436,8 +436,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={cemeteryAsset.url}
-          from={0.843}
-          to={0.877}
+          from={0.872}
+          to={0.912}
           targetSize={7.5}
           autoFlat
           z={-6}
@@ -446,8 +446,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={paintingAsset.url}
-          from={0.914}
-          to={0.95}
+          from={0.945}
+          to={0.985}
           targetSize={6}
           y={-1.4}
           z={-3}
