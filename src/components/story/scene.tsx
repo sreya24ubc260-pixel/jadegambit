@@ -177,8 +177,8 @@ function StageModel({
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    const enter = win(p, from - 0.035, from + 0.005);
-    const exit = win(p, to - 0.005, to + 0.035);
+    const enter = win(p, from - 0.012, from + 0.004);
+    const exit = win(p, to - 0.004, to + 0.012);
 
     const on = enter - exit;
     g.visible = on > 0.01;
@@ -414,8 +414,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={dragonAsset.url}
-          from={0.76}
-          to={0.79}
+          from={0.68}
+          to={0.75}
           targetSize={9}
           y={0.4}
           z={-9}
@@ -425,8 +425,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={festivalLanternAsset.url}
-          from={0.83}
-          to={0.86}
+          from={0.75}
+          to={0.821}
           targetSize={4.2}
           y={-1.4}
           z={-6}
@@ -436,8 +436,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={cemeteryAsset.url}
-          from={0.9}
-          to={0.93}
+          from={0.821}
+          to={0.893}
           targetSize={7.5}
           autoFlat
           z={-6}
@@ -446,8 +446,8 @@ export default function StoryScene({ progress }: { progress: React.RefObject<num
         <StageModel
           progress={progress}
           url={paintingAsset.url}
-          from={0.96}
-          to={1.15}
+          from={0.893}
+          to={0.975}
           targetSize={6}
           y={-1.4}
           z={-3}
