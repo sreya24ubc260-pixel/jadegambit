@@ -202,13 +202,11 @@ function ChessSet({ progress }: { progress: React.RefObject<number> }) {
     const g = group.current;
     if (!g) return;
     const p = progress.current ?? 0;
-    // Two windows: the game itself (acts V–VI), then the final crossing (act IX).
-    const first = win(p, 0.33, 0.37) - win(p, 0.47, 0.51);
-    const second = win(p, 0.62, 0.66) - win(p, 0.71, 0.75);
-    const on = THREE.MathUtils.clamp(first + second, 0, 1);
+    // The board appears only for the game itself (acts V–VI); later acts stay clear of it.
+    const on = win(p, 0.33, 0.37) - win(p, 0.47, 0.51);
     g.visible = on > 0.002;
     g.position.y = damp(g.position.y, -8 + on * 7.2, 2.5, dt);
-    g.rotation.y = damp(g.rotation.y, -0.5 + win(p, 0.35, 0.73) * 2, 2.5, dt);
+    g.rotation.y = damp(g.rotation.y, -0.5 + win(p, 0.35, 0.5) * 2, 2.5, dt);
   });
 
 
