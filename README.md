@@ -1,14 +1,18 @@
-# Welcome to your Lovable project
+# 3D Story Weaver
+
+i uploaded the 3d models can you make a interactive website with that. the website tells  a story with the 3d models. Also add free add free models available to you for enhance as much as possible.
 
 This project was built with [Lovable](https://lovable.dev).
 
+**Live app**: https://jadegambit.lovable.app
+
 ## Build with Lovable
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/9e221f6c-3a59-4876-9fdd-5e7cde349d9c).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
 ## Development
 
@@ -20,10 +24,3 @@ cd <repository-name>
 npm i
 npm run dev
 ```
-
-## Built with
-
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
